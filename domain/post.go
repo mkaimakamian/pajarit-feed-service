@@ -7,7 +7,7 @@ import (
 )
 
 const MAX_ALLOWED_LENGTH = 280
-const ZERO_LENGTH = 0
+const ZERO_LENGTH = 0 // TODO - mover esta constante porque se usa en otras entidades
 
 type PostRepository interface {
 	Save(ctx context.Context, post *Post) (*Post, error)
