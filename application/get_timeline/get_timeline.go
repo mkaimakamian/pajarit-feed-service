@@ -10,8 +10,8 @@ type GetTimeline struct {
 	timelineRepository domain.TimelineRepository
 }
 
-func NewGetTimeline() GetTimeline {
-	return GetTimeline{}
+func NewGetTimeline(timelineRepository domain.TimelineRepository) GetTimeline {
+	return GetTimeline{timelineRepository: timelineRepository}
 }
 
 func (e *GetTimeline) Exec(ctx context.Context, cmd GetTimelineCmd) (*TimelineResponse, error) {

@@ -10,8 +10,8 @@ type FollowUser struct {
 	followUpRepository domain.FollowUpRepository
 }
 
-func NewFollowUser() FollowUser {
-	return FollowUser{}
+func NewFollowUser(followUpRepository domain.FollowUpRepository) FollowUser {
+	return FollowUser{followUpRepository: followUpRepository}
 }
 
 func (e *FollowUser) Exec(ctx context.Context, cmd FollowUsertCmd) error {
