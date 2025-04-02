@@ -10,8 +10,8 @@ type CreatePost struct {
 	postRepository domain.PostRepository
 }
 
-func NewCreatePost() CreatePost {
-	return CreatePost{}
+func NewCreatePost(postRepository domain.PostRepository) CreatePost {
+	return CreatePost{postRepository: postRepository}
 }
 
 func (e *CreatePost) Exec(ctx context.Context, cmd CreatePostCmd) (*CreatePostResponse, error) {
