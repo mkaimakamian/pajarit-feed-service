@@ -4,19 +4,26 @@ import (
 	"fmt"
 	"net/http"
 	"pajarit-feed-service/config"
+
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 )
 
 func StartServer(cfg *config.Configuration, deps *config.Dependencies) error {
 
-	// Opté por levantar un server vanilla; quizá chi hubiese sido un poco más prolijo
-	// pero son pocas rutas las que tengo que disponibilizar, se emplea un único método por recurso
-	// y, además, presciendo del uso de middlewares
+	// Uso chi para poder manejar más fácilmente las rutas y poder obtener los pathparams
+	// Quizá para el challenge es un poco excesivo, pero es un poco más declarativo y está más ordenadoi.
+	r := chi.NewRouter()
 
-	appServer := http.NewServeMux()
-	appServer.HandleFunc("api/v1/posts", CreatePostHandler(deps))
-	appServer.HandleFunc("api/v1/followup", FollowUserHandler(deps))
-	appServer.HandleFunc("api/v1/timelines", GetTimelineHandler(deps))
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
+	r.Route("/api/v1", func(r chi.Router) {
+		r.Post("/posts", CreatePostHandler(deps))
+		r.Post("/followup", FollowUserHandler(deps))
+		r.Get("/timelines/{userId}", GetTimelineHandler(deps))
+	})
 
 	serverPort := fmt.Sprintf(":%d", cfg.Port)
-	return http.ListenAndServe(serverPort, appServer)
+	return http.ListenAndServe(serverPort, r)
 }
