@@ -1,5 +1,11 @@
 package domain
 
+import "context"
+
+type FollowerRepository interface {
+	Save(ctx context.Context, follower Follower) error
+}
+
 // Representa una relación muy básica de seguidor - seguido.
 // Idealmente debería contar con un atributo que de idea de la fecha de alta;
 // otros datos de auditoría también podrían ser útiles a menos que se audite por otro medio.
