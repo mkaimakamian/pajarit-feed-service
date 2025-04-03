@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"pajarit-feed-service/domain"
+	"pajarit-feed-service/infrastructure"
 
 	_ "modernc.org/sqlite"
 )
@@ -21,9 +22,14 @@ func BuildDependencies(cfg *Configuration) (*Dependencies, error) {
 		return nil, err
 	}
 
-	// Crear instancia de los repos
-	fmt.Print(dbClient)
-	deps := &Dependencies{}
+	postRepository := infrastructure.NewSqlitePostRepository(dbClient)
+	followUpRepository := infrastructure.NewSqliteFollowUpRepository(dbClient)
+
+	deps := &Dependencies{
+		FollowUpRepository: followUpRepository,
+		PostRepository:     postRepository,
+	}
+
 	return deps, nil
 }
 
