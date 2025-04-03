@@ -16,7 +16,7 @@ func NewCreatePost(postRepository domain.PostRepository) CreatePost {
 
 func (e *CreatePost) Exec(ctx context.Context, cmd CreatePostCmd) (*CreatePostResponse, error) {
 
-	savePost, err := domain.NewPost(cmd.AuthorId, cmd.Message)
+	savePost, err := domain.NewPost(cmd.AuthorId, cmd.Content)
 	if err != nil {
 		// Se emplea una estrategia de logueo simple a modo ilustrativo
 		// pero dependiendo las necesidades debería cambiar

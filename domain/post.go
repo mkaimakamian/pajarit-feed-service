@@ -14,13 +14,13 @@ type PostRepository interface {
 }
 
 type Post struct {
-	Id           string
-	AuthorId     string
-	Message      string
-	CreationDate time.Time
+	Id        string
+	AuthorId  string
+	Content   string
+	CreatedAt time.Time
 }
 
-func NewPost(authorId, message string) (*Post, error) {
+func NewPost(authorId, content string) (*Post, error) {
 
 	// Podemos desacoplar la validación, pero me resultó más
 	// práctico tratar la entidad como un value object
@@ -29,13 +29,13 @@ func NewPost(authorId, message string) (*Post, error) {
 		return nil, fmt.Errorf("author id can't be %d length", ZERO_LENGTH)
 	}
 
-	if len(message) == ZERO_LENGTH {
+	if len(content) == ZERO_LENGTH {
 		return nil, fmt.Errorf("post can't be %d length", ZERO_LENGTH)
 	}
 
-	if len(message) > MAX_ALLOWED_LENGTH {
+	if len(content) > MAX_ALLOWED_LENGTH {
 		return nil, fmt.Errorf("post can't exceed %d characters", MAX_ALLOWED_LENGTH)
 	}
 
-	return &Post{AuthorId: authorId, Message: message}, nil
+	return &Post{AuthorId: authorId, Content: content}, nil
 }

@@ -25,10 +25,10 @@ type TimelineResponse struct {
 // reubicación en un paquete común, prioricé el aislamiento por resultar más
 // práctico para el challenge.
 type PostResponse struct {
-	Id           string
-	AuthorId     string
-	Message      string
-	CreationDate time.Time
+	Id        string
+	AuthorId  string
+	Content   string
+	CreatedAt time.Time
 }
 
 func NewGetTimelineResponse(timeline *domain.Timeline, userId string) *TimelineResponse {
