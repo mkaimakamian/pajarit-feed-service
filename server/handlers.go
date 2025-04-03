@@ -13,7 +13,7 @@ import (
 )
 
 func CreatePostHandler(deps *config.Dependencies) http.HandlerFunc {
-	usecase := createpost.NewCreatePost(deps.PostRepository)
+	usecase := createpost.NewCreatePost(deps.PostRepository, deps.EventPublisher)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		var cmd createpost.CreatePostCmd
