@@ -11,8 +11,9 @@ import (
 
 func StartServer(cfg *config.Configuration, deps *config.Dependencies) error {
 
-	// Uso chi para poder manejar más fácilmente las rutas y poder obtener los pathparams
-	// Quizá para el challenge es un poco excesivo, pero es un poco más declarativo y está más ordenadoi.
+	// Quizá para el challenge es un poco excesivo, pero el uso de go-chi me parece una buena
+	// opción ya que es un poco más declarativo que la implementación vanilla, permite un manejo
+	// más fácil de los params y es liviana.
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
@@ -24,6 +25,6 @@ func StartServer(cfg *config.Configuration, deps *config.Dependencies) error {
 		r.Get("/timelines/{userId}", GetTimelineHandler(deps))
 	})
 
-	serverPort := fmt.Sprintf(":%d", cfg.Port)
+	serverPort := fmt.Sprintf(":%d", cfg.ServerPort)
 	return http.ListenAndServe(serverPort, r)
 }

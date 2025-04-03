@@ -7,14 +7,14 @@ import (
 
 type CreatePostCmd struct {
 	AuthorId string
-	Message  string
+	Content  string
 }
 
 type CreatePostResponse struct {
-	Id           string
-	AuthorId     string
-	Message      string
-	CreationDate time.Time
+	Id        string
+	AuthorId  string
+	Content   string
+	CreatedAt time.Time
 }
 
 func NewCreatePostResponse(post *domain.Post) *CreatePostResponse {
