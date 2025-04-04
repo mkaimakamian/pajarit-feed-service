@@ -16,12 +16,12 @@ func NewSqliteTimelineRepository(dbClient *sql.DB) *SqliteTimelineRepository {
 	return &SqliteTimelineRepository{dbClient: dbClient}
 }
 
-func (r *SqliteTimelineRepository) Get(ctx context.Context, userId string) (*domain.Timeline, error) {
+func (r *SqliteTimelineRepository) Get(ctx context.Context, userId string, offset, size int) (*domain.Timeline, error) {
 
 	// Para el challenge se está usando una base SQLite, tratando de simular el comportamiento
 	// de una base key-value, aunque con limitaciones: se guarda un JSON y no una colección.
 	// Aun así es posible simular la recuperación de datos de un modo "similar".
-	rows, err := r.dbClient.Query("SELECT value AS post FROM timelines, json_each(timelines.posts) WHERE user_id = ? LIMIT 10 OFFSET ?", userId, 0)
+	rows, err := r.dbClient.Query("SELECT value AS post FROM timelines, json_each(timelines.posts) WHERE user_id = ? LIMIT ? OFFSET ?", userId, size, offset)
 
 	if err != nil {
 		return nil, err
