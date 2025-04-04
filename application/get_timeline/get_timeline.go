@@ -16,22 +16,13 @@ func NewGetTimeline(timelineRepository domain.TimelineRepository) GetTimeline {
 
 func (e *GetTimeline) Exec(ctx context.Context, cmd GetTimelineCmd) (*TimelineResponse, error) {
 
-	// savePost, err := domain.NewPost(cmd.AuthorId, cmd.Message)
-	// if err != nil {
-	// 	// Se emplea una estrategia de logueo simple a modo ilustrativo
-	// 	// pero dependiendo las necesidades debería cambiar
-	// 	// (sobre todo si existen integraciones contra DataDog, por ejemplo)
-	// 	log.Println(err)
-	// 	return nil, err
-	// }
-
 	userId := cmd.UserId // TODO - falta aplicar validación
 
-	timeline, err := e.timelineRepository.Get(ctx, userId)
+	timeline, err := e.timelineRepository.Get(ctx, userId, cmd.Offset, cmd.Size)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	return NewGetTimelineResponse(timeline, userId), nil
+	return NewGetTimelineResponse(timeline, cmd), nil
 }

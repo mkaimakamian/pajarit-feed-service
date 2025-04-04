@@ -8,7 +8,6 @@ import (
 type GetTimelineCmd struct {
 	UserId string
 	Offset int
-	Limit  int
 	Size   int
 }
 
@@ -17,7 +16,6 @@ type TimelineResponse struct {
 	Feed   []PostResponse
 
 	Offset int
-	Limit  int
 	Size   int
 }
 
@@ -31,9 +29,11 @@ type PostResponse struct {
 	CreatedAt time.Time
 }
 
-func NewGetTimelineResponse(timeline *domain.Timeline, userId string) *TimelineResponse {
+func NewGetTimelineResponse(timeline *domain.Timeline, cmd GetTimelineCmd) *TimelineResponse {
 
-	response := TimelineResponse{UserId: userId}
+	response := TimelineResponse{UserId: cmd.UserId}
+	response.Offset = cmd.Offset
+	response.Size = len(timeline.Posts)
 
 	for _, post := range timeline.Posts {
 		post := PostResponse(post)

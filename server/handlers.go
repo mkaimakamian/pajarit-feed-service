@@ -8,6 +8,7 @@ import (
 	followuser "pajarit-feed-service/application/follow_user"
 	gettimeline "pajarit-feed-service/application/get_timeline"
 	"pajarit-feed-service/config"
+	"strconv"
 
 	"github.com/go-chi/chi"
 )
@@ -61,7 +62,13 @@ func GetTimelineHandler(deps *config.Dependencies) http.HandlerFunc {
 			return
 		}
 
-		cmd := gettimeline.GetTimelineCmd{UserId: userId}
+		offsetParam := r.URL.Query().Get("offset")
+		sizeParam := r.URL.Query().Get("size")
+
+		offset, _ := strconv.Atoi(offsetParam)
+		size, _ := strconv.Atoi(sizeParam)
+
+		cmd := gettimeline.GetTimelineCmd{UserId: userId, Offset: offset, Size: size}
 
 		response, err := usecase.Exec(r.Context(), cmd)
 		if err != nil {
