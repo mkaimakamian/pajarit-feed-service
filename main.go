@@ -23,6 +23,8 @@ func main() {
 
 	err = server.StartServer(cfg, deps)
 	if err != nil {
-		log.Fatalln("can't start server")
+		log.Fatalln("can't start server %w", err)
 	}
+
+	println("server started in port %d", cfg.ServerPort)
 }
