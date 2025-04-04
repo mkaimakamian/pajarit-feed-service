@@ -16,28 +16,11 @@ func NewSqliteTimelineRepository(dbClient *sql.DB) *SqliteTimelineRepository {
 	return &SqliteTimelineRepository{dbClient: dbClient}
 }
 
-// func (r *SqliteTimelineRepository) Save(ctx context.Context, post *domain.Post) (*domain.Post, error) {
-
-// 	toInsert := post
-// 	toInsert.Id = uuid.New().String()
-// 	toInsert.CreatedAt = time.Now().UTC()
-
-// 	_, err := r.dbClient.Exec(
-// 		"INSERT INTO posts (id, author_id, content, created_at) VALUES (?, ?, ?, ?)",
-// 		toInsert.Id, post.AuthorId, post.Content, post.CreatedAt,
-// 	)
-
-// 	// TODO - tipar el error
-
-// 	if err != nil {
-// 		return nil, fmt.Errorf("can't insert post %v", err)
-// 	}
-
-// 	return toInsert, nil
-// }
-
 func (r *SqliteTimelineRepository) Get(ctx context.Context, userId string) (*domain.Timeline, error) {
 
+	// Para el challenge se está usando una base SQLite, tratando de simular el comportamiento
+	// de una base key-value, aunque con limitaciones: se guarda un JSON y no una colección.
+	// Aun así es posible simular la recuperación de datos de un modo "similar".
 	rows, err := r.dbClient.Query("SELECT value AS post FROM timelines, json_each(timelines.posts) WHERE user_id = ? LIMIT 10 OFFSET ?", userId, 0)
 
 	if err != nil {
