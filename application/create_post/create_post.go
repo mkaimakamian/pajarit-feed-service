@@ -3,20 +3,25 @@ package createpost
 import (
 	"context"
 	"log"
+	"pajarit-feed-service/application/ports"
 	"pajarit-feed-service/domain"
 )
 
 type CreatePost struct {
 	postRepository domain.PostRepository
+	eventPublisher ports.EventPublisher
 }
 
-func NewCreatePost(postRepository domain.PostRepository) CreatePost {
-	return CreatePost{postRepository: postRepository}
+func NewCreatePost(postRepository domain.PostRepository, eventPublisher ports.EventPublisher) CreatePost {
+	return CreatePost{
+		postRepository: postRepository,
+		eventPublisher: eventPublisher,
+	}
 }
 
 func (e *CreatePost) Exec(ctx context.Context, cmd CreatePostCmd) (*CreatePostResponse, error) {
 
-	savePost, err := domain.NewPost(cmd.AuthorId, cmd.Content)
+	postToSave, err := domain.NewPost(cmd.AuthorId, cmd.Content)
 	if err != nil {
 		// Se emplea una estrategia de logueo simple a modo ilustrativo
 		// pero dependiendo las necesidades debería cambiar
@@ -25,14 +30,16 @@ func (e *CreatePost) Exec(ctx context.Context, cmd CreatePostCmd) (*CreatePostRe
 		return nil, err
 	}
 
-	saved, err := e.postRepository.Save(ctx, savePost)
+	savedPost, err := e.postRepository.Save(ctx, postToSave)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	// 4. Disparar el evento para su posterior réplica
-	// TODO - Implementar los eventos
+	response := NewCreatePostResponse(savedPost)
 
-	return NewCreatePostResponse(saved), nil
+	// TODO - exponential backoff
+	go e.eventPublisher.Publish("post.created", response)
+
+	return response, nil
 }

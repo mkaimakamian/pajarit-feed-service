@@ -5,6 +5,8 @@ type Configuration struct {
 	DBMaxConnection     int
 	DBMaxIdleConnection int
 	DBPath              string
+	EventServer         string
+	EventServerPort     int
 }
 
 func LoadConfiguration() (*Configuration, error) {
@@ -14,6 +16,8 @@ func LoadConfiguration() (*Configuration, error) {
 		DBMaxConnection:     10,
 		DBMaxIdleConnection: 5,
 		DBPath:              "pajarit.db",
+		EventServer:         "nats://localhost",
+		EventServerPort:     4222,
 	}
 
 	// TODO - por la simpleza de la configuración
