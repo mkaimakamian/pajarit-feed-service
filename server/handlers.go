@@ -69,6 +69,6 @@ func GetTimelineHandler(deps *config.Dependencies) http.HandlerFunc {
 			return
 		}
 
-		HttpCreated(w, response)
+		HttpOk(w, response)
 	}
 }
