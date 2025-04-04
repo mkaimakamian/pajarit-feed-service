@@ -1,6 +1,9 @@
 package server
 
-import "net/http"
+import (
+	"encoding/json"
+	"net/http"
+)
 
 func HttpInternalServerError(w http.ResponseWriter, err error) {
 	http.Error(w, "INTERNAL_SERVER_ERROR", http.StatusInternalServerError)
@@ -14,12 +17,20 @@ func HttpMethodNotAllowed(w http.ResponseWriter) {
 	http.Error(w, "METHOD_NOT_ALLOWED", http.StatusMethodNotAllowed)
 }
 
-func HttpCreated(w http.ResponseWriter, response any) {
-	http.Error(w, "CREATED", http.StatusCreated)
-	// TODO - agregar body
+func HttpCreated(w http.ResponseWriter, data any) {
+	includeData(w, data)
+	w.WriteHeader(http.StatusCreated)
 }
 
-func HttpOk(w http.ResponseWriter, response any) {
-	http.Error(w, "OK", http.StatusOK)
-	// TODO - agregar body
+func HttpOk(w http.ResponseWriter, data any) {
+	includeData(w, data)
+	w.WriteHeader(http.StatusOK)
+}
+
+func includeData(w http.ResponseWriter, data any) {
+	if data != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(data)
+	}
 }

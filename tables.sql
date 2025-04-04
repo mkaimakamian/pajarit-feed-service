@@ -25,6 +25,6 @@ CREATE TABLE IF NOT EXISTS followup (
 
 CREATE TABLE IF NOT EXISTS timelines (
     user_id TEXT PRIMARY KEY,
-    posts TEXT NOT NULL  -- Listado de post completos
+    posts TEXT NOT NULL  -- JSON con los posts de los followed
     --, FOREIGN KEY (user_id) REFERENCES users(id)
 );

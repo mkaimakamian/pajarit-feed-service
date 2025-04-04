@@ -38,7 +38,7 @@ func (e *CreatePost) Exec(ctx context.Context, cmd CreatePostCmd) (*CreatePostRe
 
 	response := NewCreatePostResponse(savedPost)
 
-	// TODO - exponential backoff
+	// TODO - Implementar exponential backoff
 	go e.eventPublisher.Publish("post.created", response)
 
 	return response, nil
