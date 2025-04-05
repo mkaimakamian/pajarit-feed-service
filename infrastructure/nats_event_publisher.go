@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"encoding/json"
+	"log"
 	"math"
 	"math/rand"
 	"time"
@@ -26,6 +27,10 @@ func (p *NatsEventPublisher) Publish(subject string, event any) error {
 		return err
 	}
 
+	// En un escenario real, habría que definir adecuadamente
+	// los tiempos del exponential backoff, como así también
+	// plantear una estrategia sólida en caso extremo de que
+	// no se pueda disparar el evento.
 	for i := range MAX_RETRIES {
 		err = p.conn.Publish(subject, data)
 		if err == nil {
@@ -38,5 +43,9 @@ func (p *NatsEventPublisher) Publish(subject string, event any) error {
 		time.Sleep(sleepDuration)
 	}
 
-	return p.conn.Publish(subject, data)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return err
 }
