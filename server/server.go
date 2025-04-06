@@ -25,6 +25,6 @@ func StartServer(cfg *config.Configuration, deps *config.Dependencies) error {
 		r.Get("/timelines/{userId}", GetTimelineHandler(deps))
 	})
 
-	serverPort := fmt.Sprintf(":%d", cfg.ServerPort)
+	serverPort := fmt.Sprintf(":%d", cfg.Server.Port)
 	return http.ListenAndServe(serverPort, r)
 }

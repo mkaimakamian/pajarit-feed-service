@@ -1,26 +1,64 @@
 package config
 
+import (
+	"os"
+
+	"gopkg.in/yaml.v2"
+)
+
+type Server struct {
+	Port int `yaml:"port"`
+}
+
+type Database struct {
+	Path              string `yaml:"path"`
+	MaxConnection     int    `yaml:"maxConnection"`
+	MaxIdleConnection int    `yaml:"maxIdleConnection"`
+}
+
+type Event struct {
+	Server string `yaml:"serverUrl"`
+	Port   int    `yaml:"port"`
+}
+
 type Configuration struct {
-	ServerPort          int
-	DBMaxConnection     int
-	DBMaxIdleConnection int
-	DBPath              string
-	EventServer         string
-	EventServerPort     int
+	Server   Server   `yaml:"server"`
+	Database Database `yaml:"database"`
+	Event    Event    `yaml:"event"`
 }
 
 func LoadConfiguration() (*Configuration, error) {
-
-	cfg := &Configuration{
-		ServerPort:          8080,
-		DBMaxConnection:     10,
-		DBMaxIdleConnection: 5,
-		DBPath:              "pajarit.db",
-		EventServer:         "nats://localhost",
-		EventServerPort:     4222,
+	cfg, err := loadYaml()
+	if err != nil {
+		return nil, err
 	}
 
-	// TODO - por la simpleza de la configuración
-	// tal vez no sea necesario devolver error
+	// TODO - Esto podría encapsularse y generalizarse, de modo
+	// que los parámetros de configuración puedan ser sobreescritos
+	// por las variables de entorno del desarrollador
+	if value := os.Getenv("EVENT_SERVER_URL"); value != "" {
+		cfg.Event.Server = value
+	}
+
+	if value := os.Getenv("DB_PATH"); value != "" {
+		cfg.Database.Path = value
+	}
+
+	return cfg, nil
+}
+
+func loadYaml() (*Configuration, error) {
+	cfg := &Configuration{}
+
+	data, err := os.ReadFile("config/config.yaml")
+	if err != nil {
+		return nil, err
+	}
+
+	err = yaml.Unmarshal(data, cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	return cfg, nil
 }
