@@ -20,6 +20,7 @@ services:
       - ./data/pajarit.db:/app/data/pajarit.db
     depends_on:
       - nats
+    restart: on-failure
 
   timeline-worker:
     build:
@@ -34,3 +35,4 @@ services:
       - ./data/pajarit.db:/app/data/pajarit.db
     depends_on:
       - nats
+    restart: on-failure
