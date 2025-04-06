@@ -19,6 +19,11 @@ func StartServer(cfg *config.Configuration, deps *config.Dependencies) error {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
+
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Post("/posts", CreatePostHandler(deps))
 		r.Post("/followup", FollowUserHandler(deps))
