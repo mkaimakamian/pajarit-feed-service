@@ -7,6 +7,8 @@ require (
 	modernc.org/sqlite v1.37.0
 )
 
+require gopkg.in/yaml.v2 v2.4.0
+
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/google/uuid v1.6.0

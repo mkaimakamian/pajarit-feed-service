@@ -26,5 +26,5 @@ func main() {
 		log.Fatalln("can't start server %w", err)
 	}
 
-	println("server started in port %d", cfg.ServerPort)
+	println("server started in port %d", cfg.Server.Port)
 }
